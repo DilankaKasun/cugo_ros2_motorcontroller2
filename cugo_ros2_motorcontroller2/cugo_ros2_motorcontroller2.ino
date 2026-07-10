@@ -16,6 +16,7 @@ PacketSerial packetSerial;
 // 送信バッファ
 #define SEND_ENCODER_L_PTR 0  // 左エンコーダ回転数
 #define SEND_ENCODER_R_PTR 4  // 右エンコーダ回転数
+#define SEND_MODE_PTR 8       // 運転モード (0:RC, 1:CMD)
 
 unsigned long long current_time = 0, prev_time_10ms = 0, prev_time_100ms, prev_time_1000ms;  // オーバーフローしても問題ないが64bit確保
 
@@ -228,6 +229,7 @@ void onSerialPacketReceived(const uint8_t* buffer, size_t size) {
   // ボディへ送信データの書き込み
   write_int_to_buf(send_body, SEND_ENCODER_L_PTR, cugo_current_count_L);
   write_int_to_buf(send_body, SEND_ENCODER_R_PTR, cugo_current_count_R);
+  send_body[SEND_MODE_PTR] = (uint8_t)cugo_runmode;
 
   // チェックサムの計算
   uint16_t checksum = calculate_checksum(send_body, SERIAL_BIN_BUFF_SIZE);
