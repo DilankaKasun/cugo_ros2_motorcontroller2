@@ -20,7 +20,6 @@ extern long int cugo_current_count_L;
 extern long int cugo_current_count_R;
 
 extern bool cugo_switching_reset;
-extern int cugo_runmode;
 
 // 全体制御
 void cugo_init();

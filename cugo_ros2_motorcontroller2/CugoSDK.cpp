@@ -89,36 +89,10 @@ void ld2_get_cmd() {  //引数はidとチェックサム以外の配列
     }*/
 
     if (frame[1] == 0x80) {  //5.5.1 Control Mode Feedback
-      if (frame[2] == 0x00) {
-        if (cugo_switching_reset) {
-          if (cugo_old_runmode == CUGO_CMD_MODE) {
-            //Serial.println(F("###   RESETTING........     ###"));
-            cugo_reset();
-          } else if (cugo_old_runmode == CUGO_RC_MODE) {
-            cugo_runmode = CUGO_RC_MODE;
-          } else {
-          }
-        } else {
-          if (cugo_old_runmode == CUGO_CMD_MODE) {
-            cugo_runmode = CUGO_RC_MODE;
-            cugo_old_runmode = CUGO_RC_MODE;
-            //Serial.println(F("###   MODE:CUGO_RC_MODE     ###"));
-
-          } else if (cugo_old_runmode == CUGO_RC_MODE) {
-            cugo_runmode = CUGO_RC_MODE;
-          } else {
-          }
-        }
-      } else if (frame[2] == 0x01) {
-        if (cugo_old_runmode == CUGO_RC_MODE) {
-          cugo_runmode = CUGO_CMD_MODE;
-          cugo_old_runmode = CUGO_CMD_MODE;
-          //Serial.println(F("###   MODE:CUGO_CMD_MODE    ###"));
-        } else if (cugo_old_runmode == CUGO_CMD_MODE) {
-          cugo_runmode = CUGO_CMD_MODE;
-        } else {
-        }
-      }
+      cugo_runmode = CUGO_CMD_MODE;
+      cugo_old_runmode = CUGO_CMD_MODE;
+      // Re-send CMD mode command to LD-2 to override RC receiver signal
+      ld2_set_control_mode(CUGO_CMD_MODE);
     } else if (frame[1] == 0x82) {  //5.5.2 CMD RPM Feedback
 
     } else if (frame[1] == 0x84) {  //5.5.3 Current RPM Feedback
